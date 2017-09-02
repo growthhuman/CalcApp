@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     EditText editText1;
     EditText editText2;
+    TextView textView1;
     Button button1;
     Button button2;
     Button button3;
@@ -23,6 +24,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     double num1;
     double num2;
     private double calc_num;
+
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,25 +57,46 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         button4 = (Button) findViewById(R.id.button4);
         button4.setOnClickListener(this);
 
+        textView1 = (TextView)findViewById(R.id.textView1);
+        textView1.setOnClickListener(this);
+
     }
 
     @Override
     public void onClick(View v) {
+        try{
+            if(v.getId() == R.id.button1) {
+                parseNum();
+                calc_num = num1 + num2;
+                fire_intent();
+            }else if(v.getId() == R.id.button2){
+                parseNum();
+                calc_num = num1 - num2;
+                fire_intent();
+            }else if(v.getId() == R.id.button3){
+                parseNum();
+                calc_num = num1 * num2;
+                fire_intent();
+            }else if(v.getId() == R.id.button4) {
+                parseNum();
+                calc_num = num1 / num2;
+                fire_intent();
+            }
+        }catch (NumberFormatException e) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            textView1.setText("数字をいれてね");
+           }
+        }
 
+    private void parseNum(){
         num1 = parseDouble(editText1.getText().toString());
         num2 = parseDouble(editText2.getText().toString());
-        Intent intent = new Intent(this,SecondActivity.class);
+    }
 
-        if(v.getId() == R.id.button1) {
-            calc_num = num1 + num2;
-        }else if(v.getId() == R.id.button2){
-            calc_num = num1 - num2;
-        }else if(v.getId() == R.id.button3){
-            calc_num = num1 * num2;
-        }else if(v.getId() == R.id.button4){
-            calc_num = num1 / num2;
-        }
-            intent.putExtra("calc_num",calc_num);
-            startActivity(intent);
+    private void fire_intent(){
+        Intent intent = new Intent(this,SecondActivity.class);
+        intent.putExtra("calc_num",calc_num);
+        startActivity(intent);
     }
 }
